@@ -321,7 +321,8 @@ impl Logger for LogPrinter {
 fn create_global_args() -> ArgMan {
 	let mut g_args = ArgMan::new();
 	// Common arguments:
-	g_args.add_arg("-chain", "regtest".to_string(), "Selected chain/network to operate with");
+	g_args.add_arg_multi("-chain", vec!["regtest".to_string()],
+		"Selected chain/network to operate with (multiple chains can be selected at once)");
 	g_args.add_arg_unset("-datadir", "Storage directory path");
 	g_args.add_arg("-p2pport", "9735".to_string(), "Port to listen to as a p2p lightning node");
 
@@ -344,7 +345,9 @@ fn main() {
 		return;
 	}
 
-	let chain = g_args.get("-chain");
+	let chains = g_args.get_multi("-chain");
+	assert_eq!(chains.len(), 1);
+	let chain = chains[0].as_str();
 	println!("Selected chain {}", chain);
 	println!("Selected RPC Host {}", g_args.get_by_category(chain, "-rpchost"));
 	let rpc_client = Arc::new(RPCClient::new(g_args.get_by_category(chain, "-rpcauth"), g_args.get_by_category(chain, "-rpchost")));
