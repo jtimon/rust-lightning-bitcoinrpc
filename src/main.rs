@@ -329,6 +329,7 @@ fn main() {
 		Arc::new(RPCClient::new(path_parts[0], path_parts[1]))
 	};
 
+	println!("Just test travis!");
 	let mut network = constants::Network::Bitcoin;
 	let secp_ctx = Secp256k1::new();
 
